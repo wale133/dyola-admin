@@ -204,7 +204,7 @@ button{cursor:pointer}
 </section>
 
 <section id="website" class="page">
-  <div class="page-head"><div><h1>Website Content</h1><p>Every section is independent. Edit one without touching the others.</p></div></div>
+  <div class="page-head"><div><h1>Website Content</h1><p>Manage section media and visibility without changing website text.</p></div></div>
   <div class="panel"><div class="section-list">
     <div class="section-row"><div><strong>Hero</strong><span>Headline · supporting text · headline video · fallback image · CTA</span></div><button class="btn light" onclick="openEditor('Hero')">Edit</button></div>
     <div class="section-row"><div><strong>What We Do</strong><span>Services · descriptions · media · ordering</span></div><button class="btn light" onclick="openEditor('What We Do')">Edit</button></div>
@@ -329,8 +329,6 @@ button{cursor:pointer}
 </div><div class="modal-actions"><button class="btn light" onclick="closeModal('companyModal')">Cancel</button><button class="btn" id="saveCompanyBtn" type="button">Add Company</button></div></div></div>
 
 <div class="modal-bg" id="editorModal"><div class="modal"><div class="modal-head"><h2 id="editorTitle">Edit Website Section</h2><button class="close" onclick="closeModal('editorModal')">×</button></div><div class="form-grid">
-<div class="field full"><label>Section Heading</label><input id="editorHeading" value=""></div>
-<div class="field full"><label>Supporting Text</label><textarea id="editorText" placeholder="Section copy"></textarea></div>
 <div class="field"><label>Background Media</label><select id="editorBackground"><option>Choose from Media Library</option><option>Upload new media</option><option>None</option></select></div>
 <div class="field"><label>Visibility</label><select id="editorVisibility"><option>Visible</option><option>Hidden</option></select></div>
 <div class="field full"><label>Section-specific media</label><select id="editorSectionMedia" multiple style="min-height:120px"><option value="">Choose from Media Library</option></select><small style="color:#667085;display:block;margin-top:6px">Hold Ctrl (Windows) or Command (Mac) to select multiple media items.</small></div>
@@ -524,40 +522,6 @@ ${e.notes||""}`);
   }));
 }
 
-async function loadSupabaseProjects(){
-  const {data,error}=await dyolaSupabase
-    .from("projects")
-    .select("id,title,slug,description,category,subcategory,client,location,cover_image,featured,published,created_at,updated_at")
-    .order("created_at",{ascending:false});
-  if(error) throw error;
-
-  const {data:mediaRows, error:mediaError}=await dyolaSupabase
-    .from("media")
-    .select("id,name,type,folder,url,r2_key,created_at")
-    .order("created_at",{ascending:false});
-  if(mediaError) throw mediaError;
-
-  const projectMedia=mediaRows||[];
-
-  db.projects=(data||[]).map(p=>({
-    id:p.id,
-    name:p.title||"",
-    client:p.client||"",
-    type:p.subcategory||"",
-    category:p.category||"",
-    description:p.description||"",
-    thumbnail:p.cover_image||"",
-    media:projectMedia.filter(m=>String(m.folder||"").trim()===String(p.title||"").trim()),
-    featured:p.featured===true,
-    published:p.published!==false,
-    slug:p.slug||"",
-    location:p.location||"",
-    created_at:p.created_at,
-    updated_at:p.updated_at
-  }));
-  renderProjects();
-}
-
 function renderProjects(){
   const grid=document.querySelector("#projects .media-grid");if(!grid)return;
   const filter=activeFilters.projects;
@@ -573,13 +537,10 @@ function renderProjects(){
       <button class="btn danger" data-delete-project="${esc(p.id)}" style="position:absolute;right:8px;bottom:8px;padding:6px 8px">Delete</button>
     </div>`;
   }).join(""):`<div style="padding:25px;color:#667085">No projects match this filter/search.</div>`;
-  grid.querySelectorAll("[data-delete-project]").forEach(btn=>btn.addEventListener("click",async()=>{
+  grid.querySelectorAll("[data-delete-project]").forEach(btn=>btn.addEventListener("click",()=>{
     if(confirm("Delete this project?")){
-      const id=btn.dataset.deleteProject;
-      const {error}=await dyolaSupabase.from("projects").delete().eq("id",id);
-      if(error){console.error(error);showToast("Could not delete project.");return;}
-      db.projects=db.projects.filter(x=>x.id!==id);
-      renderProjects();showToast("Project deleted.");
+      db.projects=db.projects.filter(x=>x.id!==btn.dataset.deleteProject);
+      save("projects",db.projects);renderProjects();showToast("Project deleted.");
     }
   }));
 }
@@ -732,8 +693,6 @@ function openEditor(name){
   currentSection=name;
   const data=db.sections[name]||{heading:name,text:"",visible:true,background:"",media_ids:[]};
   document.getElementById("editorTitle").textContent="Edit "+name;
-  document.getElementById("editorHeading").value=data.heading||name;
-  document.getElementById("editorText").value=data.text||"";
   document.getElementById("editorVisibility").value=data.visible===false?"Hidden":"Visible";
   const background=document.getElementById("editorBackground");
   background.dataset.current=data.background_media_id||data.background||"";
@@ -1029,90 +988,17 @@ document.getElementById("saveEnquiryBtn")?.addEventListener("click",()=>{
   db.enquiries.unshift(e);if(save("enquiries",db.enquiries)){renderEnquiries();closeModal("enquiryModal");showToast("Enquiry saved.")}
 });
 
-/* Project — Supabase */
-function slugifyProjectTitle(value){
-  return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
-}
-
-async function uploadProjectCover(file){
-  if(!file)return "";
-  const media=await uploadMediaFileToWorker(file,"Image","Project");
-  return media?.url||"";
-}
-
-async function uploadProjectMediaFiles(files,projectName){
-  const uploaded=[];
-  for(const file of files){
-    const type=String(file.type||"").toLowerCase().startsWith("video/") ? "Video" : "Image";
-    const media=await uploadMediaFileToWorker(file,type,projectName);
-    if(media?.url) uploaded.push(media);
-  }
-  return uploaded;
-}
-
+/* Project */
 document.getElementById("saveProjectBtn")?.addEventListener("click",async()=>{
-  const name=document.getElementById("projectName").value.trim();
-  if(!name){showToast("Please enter a project name.");return}
-
-  const button=document.getElementById("saveProjectBtn");
-  const coverFile=document.getElementById("projectThumbnail").files[0];
-  const projectMediaFiles=[...document.getElementById("projectMedia").files];
-  button.disabled=true;
-  button.textContent="Saving...";
-
-  try{
-    const coverImage=await uploadProjectCover(coverFile);
-    const uploadedMedia=await uploadProjectMediaFiles(projectMediaFiles,name);
-    const payload={
-      title:name,
-      slug:slugifyProjectTitle(name)+"-"+Date.now().toString(36),
-      description:document.getElementById("projectDescription").value.trim()||null,
-      category:document.getElementById("projectCategory").value||null,
-      subcategory:document.getElementById("projectType").value||null,
-      client:document.getElementById("projectClient").value.trim()||null,
-      location:null,
-      cover_image:coverImage||null,
-      featured:false,
-      published:true
-    };
-
-    const {data,error}=await dyolaSupabase
-      .from("projects")
-      .insert([payload])
-      .select("id,title,slug,description,category,subcategory,client,location,cover_image,featured,published,created_at,updated_at")
-      .single();
-
-    if(error)throw error;
-
-    db.projects.unshift({
-      id:data.id,
-      name:data.title||"",
-      client:data.client||"",
-      type:data.subcategory||"",
-      category:data.category||"",
-      description:data.description||"",
-      thumbnail:data.cover_image||"",
-      media:uploadedMedia,
-      featured:data.featured===true,
-      published:data.published!==false,
-      slug:data.slug||""
-    });
-
-    renderProjects();
-    closeModal("projectModal");
-    document.getElementById("projectName").value="";
-    document.getElementById("projectClient").value="";
-    document.getElementById("projectDescription").value="";
-    document.getElementById("projectThumbnail").value="";
-    document.getElementById("projectMedia").value="";
-    showToast("Project created successfully.");
-  }catch(error){
-    console.error(error);
-    showToast(error.message||"Could not create project.");
-  }finally{
-    button.disabled=false;
-    button.textContent="Create Project";
-  }
+  const name=document.getElementById("projectName").value.trim();if(!name){showToast("Please enter a project name.");return}
+  const thumb=await readFile(document.getElementById("projectThumbnail").files[0]);
+  const media=await Promise.all([...document.getElementById("projectMedia").files].map(readFile));
+  db.projects.unshift({
+    id:uid(),name,client:document.getElementById("projectClient").value.trim(),
+    type:document.getElementById("projectType").value,category:document.getElementById("projectCategory").value,
+    description:document.getElementById("projectDescription").value.trim(),thumbnail:thumb,media,featured:false
+  });
+  if(save("projects",db.projects)){renderProjects();closeModal("projectModal");showToast("Project created.")}
 });
 
 /* Media — Cloudflare R2 Worker → Supabase */
@@ -1308,15 +1194,11 @@ document.getElementById("saveSectionBtn")?.addEventListener("click",async()=>{
   const mediaIds=[...mediaSelect.options].filter(o=>o.selected).map(o=>o.value);
   const old=db.sections[currentSection]||{};
 
-  const headingValue=document.getElementById("editorHeading").value.trim();
-  const textValue=document.getElementById("editorText").value.trim();
-  const visibilityValue=document.getElementById("editorVisibility").value;
-
   const payload={
     section_key:currentSection,
-    heading:headingValue||currentSection,
-    text:textValue||"",
-    visible:visibilityValue!=="Hidden",
+    heading:old.heading||currentSection,
+    text:old.text||"",
+    visible:old.visible!==false,
     background_media_id:(backgroundValue&&backgroundValue!=="__none__")?backgroundValue:null,
     media_ids:mediaIds,
     updated_at:new Date().toISOString()
@@ -1434,7 +1316,7 @@ async function initSupabaseAdmin(){
   const {data:{session}}=await dyolaSupabase.auth.getSession();
   if(session){
     gate.style.display="none";
-    try{ await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseProjects(); await loadSupabaseWebsiteSections(); }catch(error){ console.error(error); showToast("Signed in, but some admin data could not be loaded."); }
+    try{ await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseWebsiteSections(); }catch(error){ console.error(error); showToast("Signed in, but some admin data could not be loaded."); }
   }else{ gate.style.display="flex"; }
 }
 
@@ -1449,7 +1331,7 @@ document.getElementById("authLoginBtn")?.addEventListener("click",async()=>{
   btn.disabled=false; btn.textContent="Sign In";
   if(error){errorBox.textContent=error.message;return;}
   document.getElementById("authGate").style.display="none";
-  try{await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseProjects(); await loadSupabaseWebsiteSections();}catch(err){console.error(err);showToast("Signed in, but some admin data could not be loaded.");}
+  try{await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseWebsiteSections();}catch(err){console.error(err);showToast("Signed in, but some admin data could not be loaded.");}
 });
 
 document.getElementById("logoutBtn")?.addEventListener("click",async()=>{ await dyolaSupabase.auth.signOut(); location.reload(); });
