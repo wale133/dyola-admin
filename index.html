@@ -172,10 +172,15 @@ button{cursor:pointer}
   <div class="page-head"><div><h1>Projects</h1><p>Manage everything shown in DyOla's portfolio.</p></div><button class="btn" onclick="openModal('projectModal')">+ Add Project</button></div>
   <div class="panel"><div class="toolbar" id="projectFilters">
 <button class="btn light filter-active" data-filter="All">All</button>
-<button class="btn light" data-filter="Video">Video</button>
-<button class="btn light" data-filter="Photography">Photography</button>
-<button class="btn light" data-filter="Graphics">Graphics</button>
-<button class="btn light" data-filter="Featured">Featured</button>
+<button class="btn light" data-filter="Real Estate">Real Estate</button>
+<button class="btn light" data-filter="Commercial">Commercial</button>
+<button class="btn light" data-filter="Interiors">Interiors</button>
+<button class="btn light" data-filter="Documentary">Documentary</button>
+<button class="btn light" data-filter="Campaigns">Campaigns</button>
+<button class="btn light" data-filter="Content">Content</button>
+<button class="btn light" data-filter="Product">Product</button>
+<button class="btn light" data-filter="Events">Events</button>
+
 </div>
   <div class="media-grid"><div class="media-card"><div class="media-thumb">▶</div><div class="media-info"><b>Luxury Apartment Campaign</b><small>Video · Real Estate</small></div></div><div class="media-card"><div class="media-thumb">▧</div><div class="media-info"><b>Modern Interior Series</b><small>Photography · Interiors</small></div></div><div class="media-card"><div class="media-thumb">✦</div><div class="media-info"><b>Property Social Campaign</b><small>Graphics · Campaign</small></div></div></div></div>
 </section>
@@ -195,7 +200,7 @@ button{cursor:pointer}
 <section id="reviews" class="page">
   <div class="page-head"><div><h1>Reviews</h1><p>Approve client reviews before they appear publicly.</p></div></div>
   <div class="panel"><div class="toolbar" id="reviewFilters">
-<button class="btn filter-active" data-filter="Pending">Pending</button>
+<button class="btn light filter-active" data-filter="Pending">Pending</button>
 <button class="btn light" data-filter="Approved">Approved</button>
 <button class="btn light" data-filter="Rejected">Rejected</button>
 <button class="btn light" data-filter="All">All</button>
@@ -204,7 +209,7 @@ button{cursor:pointer}
 </section>
 
 <section id="website" class="page">
-  <div class="page-head"><div><h1>Website Content</h1><p>Manage section media and visibility without changing website text.</p></div></div>
+  <div class="page-head"><div><h1>Website Content</h1><p>Every section is independent. Edit one without touching the others.</p></div></div>
   <div class="panel"><div class="section-list">
     <div class="section-row"><div><strong>Hero</strong><span>Headline · supporting text · headline video · fallback image · CTA</span></div><button class="btn light" onclick="openEditor('Hero')">Edit</button></div>
     <div class="section-row"><div><strong>What We Do</strong><span>Services · descriptions · media · ordering</span></div><button class="btn light" onclick="openEditor('What We Do')">Edit</button></div>
@@ -306,21 +311,99 @@ button{cursor:pointer}
 <div class="field full"><label>Notes</label><textarea id="enqNotes" placeholder="Project details"></textarea></div>
 </div><div class="modal-actions"><button class="btn light" onclick="closeModal('enquiryModal')">Cancel</button><button class="btn" id="saveEnquiryBtn" type="button">Save Enquiry</button></div></div></div>
 
-<div class="modal-bg" id="projectModal"><div class="modal"><div class="modal-head"><h2>Add Project</h2><button class="close" onclick="closeModal('projectModal')">×</button></div><div class="form-grid">
+<div class="modal-bg" id="projectModal"><div class="modal"><div class="modal-head"><h2 id="projectModalTitle">Add Project</h2><button class="close" onclick="closeModal('projectModal')">×</button></div><div class="form-grid">
 <div class="field"><label>Project Name</label><input id="projectName" placeholder="Luxury Apartment Campaign"></div>
 <div class="field"><label>Client</label><input id="projectClient" placeholder="Client name"></div>
-<div class="field"><label>Type</label><select id="projectType"><option>Video</option><option>Photography</option><option>Graphics</option></select></div>
 <div class="field"><label>Category</label><select id="projectCategory"><option>Real Estate</option><option>Documentary</option><option>Commercial</option><option>Interiors</option><option>Campaigns</option><option>Content</option><option>Product</option><option>Events</option></select></div>
+<div class="field"><label>Location</label><input id="projectLocation" placeholder="Lekki Phase 1"></div>
+<div class="field"><label>Website Visibility</label><select id="projectPublished"><option value="true">Published</option><option value="false">Hidden</option></select></div>
 <div class="field full"><label>Description</label><textarea id="projectDescription" placeholder="Project description"></textarea></div>
-<div class="field"><label>Thumbnail</label><input id="projectThumbnail" type="file" accept="image/*"></div>
-<div class="field"><label>Project Media</label><input id="projectMedia" type="file" accept="image/*,video/*" multiple></div>
+
+<div class="field full" style="margin-top:8px">
+  <div style="font-size:16px;font-weight:700;margin-bottom:6px">Project Story</div>
+  <div class="form-note">These fields control the story sections shown on this project's public page. The Work is generated automatically from the media attached to the project.</div>
+</div>
+
+<div class="field full">
+  <label>01 — The Challenge</label>
+  <textarea id="projectChallenge" placeholder="Project-specific challenge"></textarea>
+</div>
+
+<div class="field full">
+  <label>02 — Our Approach</label>
+  <textarea id="projectApproach" placeholder="What DyOla actually did for this project"></textarea>
+</div>
+
+<div class="field full">
+  <label>04 — The Outcome</label>
+  <textarea id="projectOutcome" placeholder="Project-specific outcome"></textarea>
+</div>
+
+<div class="field full"><div class="form-note">Create the project first. Then upload its videos, photos and designs from Media Library and assign each file to this project.</div></div>
 </div><div class="modal-actions"><button class="btn light" onclick="closeModal('projectModal')">Cancel</button><button class="btn" id="saveProjectBtn" type="button">Create Project</button></div></div></div>
 
 <div class="modal-bg" id="mediaModal"><div class="modal"><div class="modal-head"><h2>Upload Media</h2><button class="close" onclick="closeModal('mediaModal')">×</button></div><div class="form-grid">
 <div class="field full"><label>Choose files</label><input id="mediaFiles" type="file" multiple accept="image/*,video/*,.svg"></div>
 <div class="field"><label>Media type</label><select id="mediaType"><option>Image</option><option>Video</option><option>Logo</option></select></div>
 <div class="field"><label>Folder / use</label><select id="mediaFolder"><option>General</option><option>Hero</option><option>About</option><option>Project</option><option>Company</option></select></div>
+<div class="field full"><label>Project</label><select id="mediaProject"><option value="">Not assigned to a project</option></select></div>
+<div class="field full"><label>Display Name <span style="font-weight:400;color:#7a8696">(optional)</span></label><input id="mediaDisplayName" placeholder="e.g. Modern Living Room"></div>
 </div><div class="modal-actions"><button class="btn light" onclick="closeModal('mediaModal')">Cancel</button><button class="btn" id="uploadMediaBtn" type="button">Upload</button></div></div></div>
+
+<div class="modal-bg" id="projectMediaManagerModal">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-head">
+      <div>
+        <h2 id="projectMediaManagerTitle">Manage Project Media</h2>
+        <div id="projectMediaManagerSubtitle" style="font-size:13px;color:#667085;margin-top:4px"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn light" type="button" id="editProjectBtn">Edit Project</button>
+        <button class="close" onclick="closeModal('projectMediaManagerModal')">×</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div id="projectMediaSortTabs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
+      <div id="projectMediaManagerList" class="media-grid" style="max-height:430px;overflow:auto"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px">
+        <div style="font-size:12px;color:#667085">Drag media into the order you want it to appear on the public project page.</div>
+        <button class="btn" type="button" id="saveProjectMediaOrderBtn">Save Media Order</button>
+      </div>
+    </div>
+
+    <div class="panel" style="margin:0 0 16px;border:1px solid #e5e7eb">
+      <div style="font-weight:700;margin-bottom:6px">Add from Media Library</div>
+      <div style="font-size:13px;color:#667085;margin-bottom:14px">Use media that has already been uploaded instead of uploading the same file again.</div>
+      <div id="projectMediaLibraryList" style="max-height:220px;overflow:auto"></div>
+    </div>
+
+    <div class="panel" style="margin:0;border:1px solid #e5e7eb">
+      <div style="font-weight:700;margin-bottom:14px">Upload new media to this project</div>
+      <div class="form-grid">
+        <div class="field full">
+          <label>Choose files</label>
+          <input id="projectManagerFiles" type="file" multiple accept="image/*,video/*,.svg">
+        </div>
+        <div class="field">
+          <label>Media type</label>
+          <select id="projectManagerType">
+            <option>Image</option>
+            <option>Video</option>
+            <option>Design</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Display Name <span style="font-weight:400;color:#7a8696">(optional)</span></label>
+          <input id="projectManagerDisplayName" placeholder="e.g. Modern Living Room">
+        </div>
+      </div>
+      <div class="modal-actions" style="padding:16px 0 0">
+        <button class="btn" id="projectManagerUploadBtn" type="button">Add Media</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal-bg" id="companyModal"><div class="modal"><div class="modal-head"><h2>Add Company</h2><button class="close" onclick="closeModal('companyModal')">×</button></div><div class="form-grid">
 <div class="field"><label>Company Name</label><input id="companyName" placeholder="Company name"></div>
@@ -328,7 +411,19 @@ button{cursor:pointer}
 <div class="field full"><label>Logo</label><input id="companyLogo" type="file" accept="image/*,.svg"></div>
 </div><div class="modal-actions"><button class="btn light" onclick="closeModal('companyModal')">Cancel</button><button class="btn" id="saveCompanyBtn" type="button">Add Company</button></div></div></div>
 
+<div class="modal-bg" id="reviewEditModal"><div class="modal"><div class="modal-head"><h2>Edit Client Review</h2><button class="close" onclick="closeModal('reviewEditModal')">×</button></div><div class="form-grid">
+<div class="field"><label>Reviewer Name</label><input id="editReviewName"></div>
+<div class="field"><label>Company</label><input id="editReviewCompany"></div>
+<div class="field"><label>Position</label><input id="editReviewPosition"></div>
+<div class="field"><label>Rating</label><select id="editReviewRating"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option></select></div>
+<div class="field full"><label>Review</label><textarea id="editReviewText" style="min-height:140px"></textarea></div>
+</div><div class="modal-actions"><button class="btn light" onclick="closeModal('reviewEditModal')">Cancel</button><button class="btn" id="saveReviewEditBtn" type="button">Save Changes</button></div></div></div>
+
+<div class="modal-bg" id="reviewProjectsModal"><div class="modal"><div class="modal-head"><h2>Assign Review to Projects</h2><button class="close" onclick="closeModal('reviewProjectsModal')">×</button></div><div id="reviewProjectsList" class="form-grid"></div><div class="modal-actions"><button class="btn light" onclick="closeModal('reviewProjectsModal')">Cancel</button><button class="btn" id="saveReviewProjectsBtn" type="button">Save Assignments</button></div></div></div>
+
 <div class="modal-bg" id="editorModal"><div class="modal"><div class="modal-head"><h2 id="editorTitle">Edit Website Section</h2><button class="close" onclick="closeModal('editorModal')">×</button></div><div class="form-grid">
+<div class="field full"><label>Section Heading</label><input id="editorHeading" value=""></div>
+<div class="field full"><label>Supporting Text</label><textarea id="editorText" placeholder="Section copy"></textarea></div>
 <div class="field"><label>Background Media</label><select id="editorBackground"><option>Choose from Media Library</option><option>Upload new media</option><option>None</option></select></div>
 <div class="field"><label>Visibility</label><select id="editorVisibility"><option>Visible</option><option>Hidden</option></select></div>
 <div class="field full"><label>Section-specific media</label><select id="editorSectionMedia" multiple style="min-height:120px"><option value="">Choose from Media Library</option></select><small style="color:#667085;display:block;margin-top:6px">Hold Ctrl (Windows) or Command (Mac) to select multiple media items.</small></div>
@@ -453,7 +548,7 @@ Object.keys(db).forEach(k=>{
   }
 });
 
-let activeFilters={enquiries:"All",projects:"All Media",media:"All Media",reviews:"Pending"};
+let activeFilters={enquiries:"All",projects:"All",media:"All Media",reviews:"Pending"};
 let searchQuery="";
 
 function openModal(id){document.getElementById(id)?.classList.add("open")}
@@ -522,47 +617,495 @@ ${e.notes||""}`);
   }));
 }
 
+async function loadSupabaseProjects(){
+  const {data,error}=await dyolaSupabase
+    .from("projects")
+    .select("id,title,slug,description,challenge,approach,outcome,category,subcategory,client,location,published,created_at,updated_at")
+    .order("created_at",{ascending:false});
+  if(error) throw error;
+
+  const {data:mediaRows, error:mediaError}=await dyolaSupabase
+    .from("media")
+    .select("id,name,display_name,type,folder,url,r2_key,project_id,display_order,created_at")
+    .order("created_at",{ascending:false});
+  if(mediaError) throw mediaError;
+
+  const projectMedia=mediaRows||[];
+
+  db.projects=(data||[]).map(p=>({
+    id:p.id,
+    name:p.title||"",
+    client:p.client||"",
+    type:p.subcategory||"",
+    category:p.category||"",
+    description:p.description||"",
+    challenge:p.challenge||"",
+    approach:p.approach||"",
+    outcome:p.outcome||"",
+    thumbnail:"",
+    media:projectMedia.filter(m=>String(m.project_id||"")===String(p.id)).sort((a,b)=>{
+      const ao=a.display_order==null?Number.MAX_SAFE_INTEGER:Number(a.display_order);
+      const bo=b.display_order==null?Number.MAX_SAFE_INTEGER:Number(b.display_order);
+      if(ao!==bo)return ao-bo;
+      return new Date(a.created_at||0)-new Date(b.created_at||0);
+    }),
+    featured:false,
+    published:p.published!==false,
+    slug:p.slug||"",
+    location:p.location||"",
+    created_at:p.created_at,
+    updated_at:p.updated_at
+  }));
+  renderProjects();
+  populateMediaProjectSelect();
+}
+
+function populateMediaProjectSelect(){
+  const select=document.getElementById("mediaProject");
+  if(!select) return;
+  const current=select.value;
+  select.innerHTML='<option value="">Not assigned to a project</option>'+(db.projects||[]).map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+  if(current) select.value=current;
+}
+
 function renderProjects(){
   const grid=document.querySelector("#projects .media-grid");if(!grid)return;
   const filter=activeFilters.projects;
   const rows=db.projects.filter(p=>{
-    const typeOk=filter==="All"||filter==="Featured"?(filter==="All"||(p.featured===true)):p.type===filter;
-    return typeOk&&matchesSearch([p.name,p.client,p.type,p.category,p.description].join(" "));
+    const categoryOk=filter==="All"||p.category===filter;
+    return categoryOk&&matchesSearch([p.name,p.client,p.type,p.category,p.description].join(" "));
   });
   grid.innerHTML=rows.length?rows.map(p=>{
     const i=db.projects.findIndex(x=>x.id===p.id);
-    return `<div class="media-card" style="position:relative">
-      <div class="media-thumb">${p.thumbnail?`<img src="${p.thumbnail}" style="width:100%;height:100%;object-fit:cover">`:(p.type==="Video"?"▶":p.type==="Photography"?"▧":"✦")}</div>
-      <div class="media-info"><b>${esc(p.name)}</b><small>${esc(p.type)} · ${esc(p.category)}${p.featured?" · Featured":""}</small></div>
+    const projectMedia=Array.isArray(p.media)?p.media:[];
+    const thumbnailMedia=projectMedia.find(m=>m.type==="Image"&&m.url)||projectMedia.find(m=>m.type==="Video"&&m.url)||projectMedia.find(m=>m.url);
+    const thumbnailMarkup=thumbnailMedia?.url
+      ? (thumbnailMedia.type==="Video"
+          ? `<video src="${esc(thumbnailMedia.url)}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block"></video>`
+          : `<img src="${esc(thumbnailMedia.url)}" alt="${esc(thumbnailMedia.display_name||thumbnailMedia.name||p.name)}" style="width:100%;height:100%;object-fit:cover;display:block">`)
+      : (projectMedia.length ? "▧" : "○");
+    return `<div class="media-card" data-manage-project="${esc(p.id)}" style="position:relative;cursor:pointer">
+      <div class="media-thumb">${thumbnailMarkup}</div>
+      <div class="media-info"><b>${esc(p.name)}</b><small>${esc(p.client||"")}${p.client&&p.category?" · ":""}${esc(p.category||"")}${p.published?" · Published":" · Hidden"}</small></div>
+      <button class="btn light" data-toggle-project="${esc(p.id)}" style="position:absolute;right:72px;bottom:8px;padding:6px 8px">${p.published?"Hide":"Publish"}</button>
       <button class="btn danger" data-delete-project="${esc(p.id)}" style="position:absolute;right:8px;bottom:8px;padding:6px 8px">Delete</button>
     </div>`;
   }).join(""):`<div style="padding:25px;color:#667085">No projects match this filter/search.</div>`;
-  grid.querySelectorAll("[data-delete-project]").forEach(btn=>btn.addEventListener("click",()=>{
-    if(confirm("Delete this project?")){
-      db.projects=db.projects.filter(x=>x.id!==btn.dataset.deleteProject);
-      save("projects",db.projects);renderProjects();showToast("Project deleted.");
+  grid.querySelectorAll(".media-thumb video").forEach(video=>{
+    video.addEventListener("loadeddata",()=>{ try{ video.currentTime=0; }catch(e){} },{once:true});
+  });
+
+  grid.querySelectorAll("[data-manage-project]").forEach(card=>{
+    card.addEventListener("click",function(event){
+      if(event.target.closest("[data-toggle-project]") || event.target.closest("[data-delete-project]")) return;
+      const project=db.projects.find(x=>String(x.id)===String(card.dataset.manageProject));
+      if(project) openProjectMediaManager(project.id);
+    });
+  });
+
+  grid.querySelectorAll("[data-toggle-project]").forEach(btn=>btn.addEventListener("click",async()=>{
+    const id=btn.dataset.toggleProject;
+    const project=db.projects.find(x=>x.id===id);
+    if(!project)return;
+    const nextPublished=!project.published;
+    btn.disabled=true;
+    try{
+      const {error}=await dyolaSupabase.from("projects").update({published:nextPublished}).eq("id",id);
+      if(error)throw error;
+      project.published=nextPublished;
+      renderProjects();
+      showToast(nextPublished?"Project published.":"Project hidden from the website.");
+    }catch(error){
+      console.error(error);
+      btn.disabled=false;
+      showToast("Could not update project visibility.");
+    }
+  }));
+
+  grid.querySelectorAll("[data-delete-project]").forEach(btn=>btn.addEventListener("click",async()=>{
+    if(!confirm("Delete this project?")) return;
+
+    const id=btn.dataset.deleteProject;
+    const project=db.projects.find(x=>String(x.id)===String(id));
+    if(!project) return;
+
+    btn.disabled=true;
+
+    try{
+      /*
+       * A project can contain many media files. We keep those files in the
+       * Media Library, but first detach them from this project so a foreign
+       * key cannot block the project deletion.
+       */
+      const {error:detachError}=await dyolaSupabase
+        .from("media")
+        .update({project_id:null})
+        .eq("project_id",id);
+
+      if(detachError) throw detachError;
+
+      /*
+       * Ask Supabase to return the deleted row. An empty result means the
+       * DELETE did not actually remove anything (for example because RLS
+       * prevented the operation).
+       */
+      const {data:deletedRows,error:deleteError}=await dyolaSupabase
+        .from("projects")
+        .delete()
+        .eq("id",id)
+        .select("id");
+
+      if(deleteError) throw deleteError;
+
+      if(!Array.isArray(deletedRows) || deletedRows.length===0){
+        throw new Error("Project was not deleted from Supabase. Check the Projects DELETE policy for the signed-in admin.");
+      }
+
+      /* Confirm it is really gone before updating the visible Admin state. */
+      const {data:remaining,error:verifyError}=await dyolaSupabase
+        .from("projects")
+        .select("id")
+        .eq("id",id)
+        .limit(1);
+
+      if(verifyError) throw verifyError;
+
+      if(Array.isArray(remaining) && remaining.length){
+        throw new Error("Supabase still returned the project after deletion.");
+      }
+
+      db.projects=db.projects.filter(x=>String(x.id)!==String(id));
+      renderProjects();
+      showToast("Project permanently deleted.");
+    }catch(error){
+      console.error("Project deletion failed:",error);
+      showToast(error?.message || "Could not delete project.");
+      btn.disabled=false;
+      /* Reload the real database state so the UI never lies about deletion. */
+      try{ await loadSupabaseProjects(); }catch(reloadError){ console.error(reloadError); }
     }
   }));
 }
+
+const DYOLA_MEDIA_WORKER_BASE_URL="https://wild-firefly-e101.latmaxsgallery.workers.dev";
+const DYOLA_MEDIA_DELETE_URL=`${DYOLA_MEDIA_WORKER_BASE_URL}/delete`;
+
+async function getAdminAccessToken(){
+  const {data:{session}}=await dyolaSupabase.auth.getSession();
+  if(!session?.access_token) throw new Error("Your admin session has expired. Please sign in again.");
+  return session.access_token;
+}
+
+async function deleteMediaFromStorage(media){
+  if(!media?.r2_key) throw new Error("This media is missing its Cloudflare R2 key and cannot be safely deleted.");
+  const token=await getAdminAccessToken();
+  const response=await fetch(DYOLA_MEDIA_DELETE_URL,{method:"POST",headers:{"Authorization":`Bearer ${token}`,"Content-Type":"application/json"},body:JSON.stringify({media_id:media.id,r2_key:media.r2_key})});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok || result.success===false) throw new Error(result.message||result.error||"Media deletion failed.");
+}
+
+
+let activeProjectMediaManagerId="";
+
+function openProjectMediaManager(projectId){
+  const project=(db.projects||[]).find(p=>String(p.id)===String(projectId));
+  if(!project)return;
+
+  activeProjectMediaManagerId=String(project.id);
+
+  document.getElementById("projectMediaManagerTitle").textContent=`Manage Media — ${project.name}`;
+  document.getElementById("projectMediaManagerSubtitle").textContent=
+    `${Array.isArray(project.media)?project.media.length:0} media item${Array.isArray(project.media)&&project.media.length===1?"":"s"} assigned to this project.`;
+
+  document.getElementById("projectManagerFiles").value="";
+  document.getElementById("projectManagerDisplayName").value="";
+  document.getElementById("projectManagerType").value="Image";
+
+  renderProjectMediaManager();
+  openModal("projectMediaManagerModal");
+}
+
+let activeProjectMediaSortType="All";
+
+function projectMediaSortType(media){
+  const type=String(media?.type||"").toLowerCase();
+  if(type==="video") return "Video";
+  if(type==="logo" || type.includes("design") || type.includes("graphic")) return "Graphics";
+  return "Photography";
+}
+
+function renderProjectMediaManager(){
+  const project=(db.projects||[]).find(p=>String(p.id)===activeProjectMediaManagerId);
+  const grid=document.getElementById("projectMediaManagerList");
+  const libraryList=document.getElementById("projectMediaLibraryList");
+  if(!project||!grid)return;
+
+  const allMedia=Array.isArray(project.media)?project.media:[];
+  const typeCounts={
+    Video:allMedia.filter(m=>projectMediaSortType(m)==="Video").length,
+    Photography:allMedia.filter(m=>projectMediaSortType(m)==="Photography").length,
+    Graphics:allMedia.filter(m=>projectMediaSortType(m)==="Graphics").length
+  };
+
+  const tabs=document.getElementById("projectMediaSortTabs");
+  if(tabs){
+    tabs.innerHTML=[
+      ["All",allMedia.length],
+      ["Video",typeCounts.Video],
+      ["Photography",typeCounts.Photography],
+      ["Graphics",typeCounts.Graphics]
+    ].map(([type,count])=>`<button type="button" class="btn light project-media-sort-tab${activeProjectMediaSortType===type?" active":""}" data-project-media-sort-type="${type}" style="padding:7px 11px">${type}${count?` (${count})`:""}</button>`).join("");
+    tabs.querySelectorAll("[data-project-media-sort-type]").forEach(btn=>btn.addEventListener("click",()=>{
+      activeProjectMediaSortType=btn.dataset.projectMediaSortType||"All";
+      renderProjectMediaManager();
+    }));
+  }
+
+  const visibleMedia=allMedia
+    .filter(m=>activeProjectMediaSortType==="All" || projectMediaSortType(m)===activeProjectMediaSortType)
+    .slice()
+    .sort((a,b)=>{
+      const ao=a.display_order==null?Number.MAX_SAFE_INTEGER:Number(a.display_order);
+      const bo=b.display_order==null?Number.MAX_SAFE_INTEGER:Number(b.display_order);
+      if(ao!==bo)return ao-bo;
+      return new Date(a.created_at||0)-new Date(b.created_at||0);
+    });
+
+  if(!visibleMedia.length){
+    grid.innerHTML='<div style="padding:30px;text-align:center;color:#667085;border:1px dashed #d0d5dd;border-radius:12px">No media in this category yet.</div>';
+  }else{
+    grid.innerHTML=visibleMedia.map(m=>{
+      const displayType=projectMediaSortType(m);
+      const preview=m.url
+        ? (displayType==="Video"
+          ? `<video src="${esc(m.url)}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block"></video>`
+          : `<img src="${esc(m.url)}" alt="${esc(m.display_name||m.name||"Project media")}" style="width:100%;height:100%;object-fit:cover;display:block">`)
+        : "▧";
+      return `<div class="media-card project-sort-item" draggable="true" data-project-sort-id="${esc(m.id)}" style="position:relative;cursor:grab">
+        <div class="media-thumb">${preview}</div>
+        <div class="media-info"><b>${esc(m.display_name||m.name||"Project media")}</b><small>${esc(displayType)}${m.folder?" · "+esc(m.folder):""}</small></div>
+        <button class="btn light" data-project-manager-rename="${esc(m.id)}" style="position:absolute;right:72px;bottom:8px;padding:6px 8px">Rename</button>
+        <button class="btn danger" data-project-manager-delete="${esc(m.id)}" style="position:absolute;right:8px;bottom:8px;padding:6px 8px">Remove</button>
+      </div>`;
+    }).join("");
+
+    let draggedProjectMediaId=null;
+    grid.querySelectorAll(".project-sort-item").forEach(item=>{
+      item.addEventListener("dragstart",function(event){
+        if(activeProjectMediaSortType==="All"){ event.preventDefault(); return; }
+        draggedProjectMediaId=item.dataset.projectSortId;
+        item.style.opacity="0.55";
+        event.dataTransfer.effectAllowed="move";
+        event.dataTransfer.setData("text/plain",draggedProjectMediaId);
+      });
+      item.addEventListener("dragend",function(){
+        item.style.opacity="";
+        draggedProjectMediaId=null;
+        grid.querySelectorAll(".project-sort-item").forEach(x=>x.style.outline="");
+      });
+      item.addEventListener("dragover",function(event){
+        event.preventDefault();
+        if(item.dataset.projectSortId!==draggedProjectMediaId)item.style.outline="2px dashed #0A1931";
+      });
+      item.addEventListener("dragleave",function(){item.style.outline="";});
+      item.addEventListener("drop",function(event){
+        event.preventDefault(); item.style.outline="";
+        const fromId=draggedProjectMediaId||event.dataTransfer.getData("text/plain");
+        const toId=item.dataset.projectSortId;
+        if(!fromId||fromId===toId)return;
+        const fromIndex=project.media.findIndex(x=>String(x.id)===String(fromId));
+        if(fromIndex<0)return;
+        const dragged=project.media[fromIndex];
+        if(activeProjectMediaSortType==="All")return;
+        if(projectMediaSortType(dragged)!==activeProjectMediaSortType)return;
+        const visibleIds=visibleMedia.map(x=>String(x.id));
+        const fromVisibleIndex=visibleIds.indexOf(String(fromId));
+        const toVisibleIndex=visibleIds.indexOf(String(toId));
+        if(fromVisibleIndex<0||toVisibleIndex<0)return;
+        visibleMedia.splice(fromVisibleIndex,1);
+        visibleMedia.splice(toVisibleIndex,0,dragged);
+        const typeItems=allMedia.filter(m=>projectMediaSortType(m)===activeProjectMediaSortType).sort((a,b)=>{
+          const ao=a.display_order==null?Number.MAX_SAFE_INTEGER:Number(a.display_order);
+          const bo=b.display_order==null?Number.MAX_SAFE_INTEGER:Number(b.display_order);
+          if(ao!==bo)return ao-bo;
+          return new Date(a.created_at||0)-new Date(b.created_at||0);
+        });
+        if(activeProjectMediaSortType!=="All"){
+          visibleMedia.forEach((media,index)=>media.display_order=index+1);
+        }else{
+          visibleMedia.forEach((media,index)=>media.display_order=index+1);
+        }
+        renderProjectMediaManager();
+      });
+    });
+
+    grid.querySelectorAll(".media-thumb video").forEach(video=>video.addEventListener("loadeddata",()=>{try{video.currentTime=0;}catch(e){}},{once:true}));
+
+    grid.querySelectorAll("[data-project-manager-rename]").forEach(btn=>btn.addEventListener("click",async function(event){
+      event.preventDefault();event.stopPropagation();
+      const item=(project.media||[]).find(x=>String(x.id)===String(btn.dataset.projectManagerRename));
+      if(!item)return;
+      const next=prompt("Enter the public display name for this media:",item.display_name||"");
+      if(next===null)return;
+      btn.disabled=true;
+      try{
+        const {error}=await dyolaSupabase.from("media").update({display_name:next.trim()||null}).eq("id",item.id);
+        if(error)throw error;
+        await loadSupabaseMedia();await loadSupabaseProjects();renderProjectMediaManager();showToast(next.trim()?"Media renamed successfully.":"Media name cleared.");
+      }catch(error){console.error(error);showToast(error.message||"Could not rename media.");}
+      finally{btn.disabled=false;}
+    }));
+
+    grid.querySelectorAll("[data-project-manager-delete]").forEach(btn=>btn.addEventListener("click",async function(event){
+      event.preventDefault();event.stopPropagation();
+      const item=(project.media||[]).find(x=>String(x.id)===String(btn.dataset.projectManagerDelete));
+      if(!item)return;
+      if(!confirm(`Remove "${item.display_name||item.name}" from this project?\n\nThis will permanently delete the file from Cloudflare R2 and its Supabase media record.`))return;
+      btn.disabled=true;btn.textContent="Removing…";
+      try{await deleteMediaFromStorage(item);await loadSupabaseMedia();await loadSupabaseProjects();renderProjectMediaManager();showToast("Project media removed.");}
+      catch(error){console.error(error);btn.disabled=false;btn.textContent="Remove";showToast(error.message||"Could not remove project media.");}
+    }));
+  }
+
+  if(libraryList){
+    const assignedIds=new Set(allMedia.map(m=>String(m.id)));
+    const available=(db.media||[]).filter(m=>!assignedIds.has(String(m.id)));
+    if(!available.length){
+      libraryList.innerHTML='<div style="padding:18px;color:#667085;border:1px dashed #d0d5dd;border-radius:10px">No other media is available in the Media Library.</div>';
+    }else{
+      libraryList.innerHTML=available.map(m=>{
+        const displayType=String(m.type||"Media")==="Logo"?"Design":(m.type||"Media");
+        const name=m.display_name||m.name||"Untitled media";
+        const thumb=m.url?(String(m.type||"").toLowerCase()==="video"?`<video src="${esc(m.url)}" muted playsinline preload="metadata" style="width:54px;height:42px;object-fit:cover;border-radius:7px"></video>`:`<img src="${esc(m.url)}" alt="" style="width:54px;height:42px;object-fit:cover;border-radius:7px">`):`<div style="width:54px;height:42px;display:grid;place-items:center;background:#f2f4f7;border-radius:7px">▧</div>`;
+        return `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #eef0f3">${thumb}<div style="flex:1;min-width:0"><b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(name)}</b><small style="color:#667085">${esc(displayType)}${m.folder?" · "+esc(m.folder):""}</small></div><button class="btn light" data-project-manager-add-existing="${esc(m.id)}" style="padding:6px 9px">Add</button></div>`;
+      }).join("");
+      libraryList.querySelectorAll("[data-project-manager-add-existing]").forEach(btn=>btn.addEventListener("click",async function(event){
+        event.preventDefault();event.stopPropagation();
+        const item=(db.media||[]).find(x=>String(x.id)===String(btn.dataset.projectManagerAddExisting));if(!item)return;
+        btn.disabled=true;btn.textContent="Adding…";
+        try{
+          const sameType=allMedia.filter(m=>projectMediaSortType(m)===projectMediaSortType(item));
+          const nextOrder=sameType.length+1;
+          const {error}=await dyolaSupabase.from("media").update({project_id:project.id,display_order:nextOrder}).eq("id",item.id);
+          if(error)throw error;
+          await loadSupabaseMedia();await loadSupabaseProjects();renderProjectMediaManager();showToast("Media added to project.");
+        }catch(error){console.error(error);btn.disabled=false;btn.textContent="Add";showToast(error.message||"Could not add media to project.");}
+      }));
+    }
+    libraryList.querySelectorAll("video").forEach(video=>video.addEventListener("loadeddata",()=>{try{video.currentTime=0;}catch(e){}},{once:true}));
+  }
+}
+
+document.getElementById("saveProjectMediaOrderBtn")?.addEventListener("click",async()=>{
+  const project=(db.projects||[]).find(p=>String(p.id)===activeProjectMediaManagerId);
+  if(!project||!Array.isArray(project.media))return;
+  const button=document.getElementById("saveProjectMediaOrderBtn");
+  button.disabled=true;button.textContent="Saving…";
+  try{
+    const groups=["Video","Photography","Graphics"];
+    const updates=[];
+    groups.forEach(type=>{
+      const items=project.media.filter(m=>projectMediaSortType(m)===type).slice().sort((a,b)=>{
+        const ao=a.display_order==null?Number.MAX_SAFE_INTEGER:Number(a.display_order);
+        const bo=b.display_order==null?Number.MAX_SAFE_INTEGER:Number(b.display_order);
+        if(ao!==bo)return ao-bo;
+        return new Date(a.created_at||0)-new Date(b.created_at||0);
+      });
+      items.forEach((item,index)=>{
+        item.display_order=index+1;
+        updates.push(dyolaSupabase.from("media").update({display_order:index+1}).eq("id",item.id));
+      });
+    });
+    const results=await Promise.all(updates);
+    const failed=results.find(result=>result.error);
+    if(failed?.error)throw failed.error;
+    db.media=(db.media||[]).map(item=>{
+      const ordered=project.media.find(x=>String(x.id)===String(item.id));
+      return ordered?{...item,display_order:ordered.display_order}:item;
+    });
+    showToast("Media order saved.");
+  }catch(error){
+    console.error("Could not save media order:",error);
+    showToast(error.message||"Could not save media order.");
+  }finally{
+    button.disabled=false;button.textContent="Save Media Order";
+  }
+});
+
+document.getElementById("projectManagerUploadBtn")?.addEventListener("click",async()=>{
+  const project=(db.projects||[]).find(p=>String(p.id)===activeProjectMediaManagerId);
+  if(!project)return;
+
+  const files=[...document.getElementById("projectManagerFiles").files];
+  if(!files.length){
+    showToast("Choose at least one file.");
+    return;
+  }
+
+  const type=document.getElementById("projectManagerType").value;
+  const displayName=document.getElementById("projectManagerDisplayName").value.trim();
+  const button=document.getElementById("projectManagerUploadBtn");
+
+  button.disabled=true;
+  button.textContent="Uploading…";
+
+  try{
+    for(const file of files){
+      await uploadMediaFileToWorker(file,type,"Project",project.id,displayName);
+    }
+
+    await loadSupabaseMedia();
+    await loadSupabaseProjects();
+
+    document.getElementById("projectManagerFiles").value="";
+    document.getElementById("projectManagerDisplayName").value="";
+
+    renderProjectMediaManager();
+    showToast(`${files.length} media file${files.length>1?"s":""} added to ${project.name}.`);
+  }catch(error){
+    console.error(error);
+    showToast(error.message||"Could not add project media.");
+  }finally{
+    button.disabled=false;
+    button.textContent="Add Media";
+  }
+});
 
 function renderMedia(){
   const grid=document.querySelector("#media .media-grid");if(!grid)return;
   const filter=activeFilters.media;
   const rows=db.media.filter(m=>{
     const typeOk=filter==="All Media"||(filter==="Images"&&m.type==="Image")||(filter==="Videos"&&m.type==="Video")||(filter==="Logos"&&m.type==="Logo");
-    return typeOk&&matchesSearch([m.name,m.type,m.folder].join(" "));
+    return typeOk&&matchesSearch([m.name,m.display_name,m.type,m.folder,m.project_id].join(" "));
   });
   grid.innerHTML=rows.length?rows.map(m=>{
+    const mediaPreview=m.url
+      ? (m.type==="Video"
+          ? `<video src="${esc(m.url)}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block"></video>`
+          : `<img src="${esc(m.url)}" alt="${esc(m.display_name||m.name)}" style="width:100%;height:100%;object-fit:cover;display:block">`)
+      : (m.type==="Logo"?"◇":"▧");
     return `<div class="media-card" style="position:relative">
-      <div class="media-thumb">${m.url&&m.type!=="Video"?`<img src="${m.url}" style="width:100%;height:100%;object-fit:cover">`:(m.type==="Video"?"🎬":m.type==="Logo"?"◇":"▧")}</div>
-      <div class="media-info"><b>${esc(m.name)}</b><small>${esc(m.type)} · ${esc(m.folder)}</small></div>
+      <div class="media-thumb">${mediaPreview}</div>
+      <div class="media-info"><b>${esc(m.display_name||m.name)}</b><small>${esc(m.type)} · ${esc(m.folder)}${m.project_id?" · Project assigned":""}</small></div>
       <button class="btn danger" data-delete-media="${esc(m.id)}" style="position:absolute;right:8px;bottom:8px;padding:6px 8px">Delete</button>
     </div>`;
   }).join(""):`<div style="padding:25px;color:#667085">No media matches this filter/search.</div>`;
-  grid.querySelectorAll("[data-delete-media]").forEach(btn=>btn.addEventListener("click",()=>{
-    if(confirm("Delete this media record?")){
-      db.media=db.media.filter(x=>x.id!==btn.dataset.deleteMedia);
-      save("media",db.media);renderMedia();populateBackgroundMedia();showToast("Media removed.");
+  grid.querySelectorAll(".media-thumb video").forEach(video=>{
+    video.addEventListener("loadeddata",()=>{ try{ video.currentTime=0; }catch(e){} },{once:true});
+  });
+  grid.querySelectorAll("[data-delete-media]").forEach(btn=>btn.addEventListener("click",async()=>{
+    const media=db.media.find(x=>String(x.id)===String(btn.dataset.deleteMedia));
+    if(!media)return;
+    if(!confirm(`Delete "${media.display_name||media.name}" permanently?\n\nThis removes the file from Cloudflare R2 and its Supabase record.`))return;
+    btn.disabled=true;btn.textContent="Deleting…";
+    try{
+      await deleteMediaFromStorage(media);
+      db.media=db.media.filter(x=>String(x.id)!==String(media.id));
+      renderMedia();populateBackgroundMedia();
+      await loadSupabaseProjects();
+      showToast("Media deleted from Cloudflare and Supabase.");
+    }catch(error){
+      console.error(error);btn.disabled=false;btn.textContent="Delete";showToast(error.message||"Could not delete media.");
     }
   }));
 }
@@ -615,7 +1158,7 @@ function renderReviews(){
       <td>${stars}</td>
       <td>${esc(r.text)}</td>
       <td><span class="status ${r.status==="Approved"?"green":r.status==="Rejected"?"red":"amber"}">${esc(r.status)}</span></td>
-      <td>${action}<button class="btn danger" data-delete-review="${esc(r.id)}" style="margin-left:6px">Delete</button></td>
+      <td>${action}<button class="btn light" data-edit-review="${esc(r.id)}" style="margin-left:6px">Edit</button><button class="btn light" data-assign-review="${esc(r.id)}" style="margin-left:6px">Projects</button><button class="btn danger" data-delete-review="${esc(r.id)}" style="margin-left:6px">Delete</button></td>
     </tr>`;
   }).join(""):`<tr><td colspan="6" style="padding:25px;color:#667085">No reviews match this filter/search.</td></tr>`;
 
@@ -625,6 +1168,29 @@ function renderReviews(){
   tbody.querySelectorAll("[data-reject-review]").forEach(btn=>btn.addEventListener("click",async()=>{
     await updateReviewStatus(btn.dataset.rejectReview,"rejected");
   }));
+  tbody.querySelectorAll("[data-assign-review]").forEach(btn=>btn.addEventListener("click",async()=>{
+    const reviewId=btn.dataset.assignReview;
+    const result=await dyolaSupabase.from("review_project_assignments").select("project_id").eq("review_id",reviewId);
+    if(result.error){showToast("Could not load project assignments.");return;}
+    const assigned=new Set((result.data||[]).map(x=>String(x.project_id)));
+    const list=document.getElementById("reviewProjectsList");
+    list.innerHTML=(db.projects||[]).length?(db.projects||[]).map(p=>`<label class="field full" style="display:flex;gap:10px;align-items:center"><input type="checkbox" data-review-project value="${esc(p.id)}" ${assigned.has(String(p.id))?"checked":""}><span>${esc(p.name)}</span></label>`).join(""): `<div style="color:#667085">Create a project first.</div>`;
+    document.getElementById("saveReviewProjectsBtn").dataset.reviewId=reviewId;
+    openModal("reviewProjectsModal");
+  }));
+
+  tbody.querySelectorAll("[data-edit-review]").forEach(btn=>btn.addEventListener("click",()=>{
+    const review=db.reviews.find(r=>String(r.id)===String(btn.dataset.editReview));
+    if(!review)return;
+    document.getElementById("editReviewName").value=review.name||"";
+    document.getElementById("editReviewCompany").value=review.company||"";
+    document.getElementById("editReviewPosition").value=review.position||"";
+    document.getElementById("editReviewRating").value=String(Number(review.rating)||5);
+    document.getElementById("editReviewText").value=review.text||"";
+    document.getElementById("saveReviewEditBtn").dataset.reviewId=review.id;
+    openModal("reviewEditModal");
+  }));
+
   tbody.querySelectorAll("[data-delete-review]").forEach(btn=>btn.addEventListener("click",async()=>{
     if(!confirm("Delete this review permanently?"))return;
     btn.disabled=true;
@@ -636,6 +1202,52 @@ function renderReviews(){
     showToast("Review deleted.");
   }));
 }
+
+document.getElementById("saveReviewEditBtn")?.addEventListener("click",async()=>{
+  const btn=document.getElementById("saveReviewEditBtn");
+  const id=btn.dataset.reviewId;
+  if(!id)return;
+  const payload={
+    name:document.getElementById("editReviewName").value.trim(),
+    company:document.getElementById("editReviewCompany").value.trim(),
+    position:document.getElementById("editReviewPosition").value.trim(),
+    rating:Number(document.getElementById("editReviewRating").value)||5,
+    review:document.getElementById("editReviewText").value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  if(!payload.name||!payload.review){showToast("Reviewer name and review are required.");return;}
+  const original=btn.textContent;
+  btn.disabled=true;btn.textContent="Saving…";
+  const {error}=await dyolaSupabase.from("reviews").update(payload).eq("id",id);
+  btn.disabled=false;btn.textContent=original;
+  if(error){console.error(error);showToast("Could not save review changes.");return;}
+  const local=db.reviews.find(r=>String(r.id)===String(id));
+  if(local){
+    local.name=payload.name;
+    local.company=payload.company;
+    local.position=payload.position;
+    local.rating=payload.rating;
+    local.text=payload.review;
+    local.updated_at=payload.updated_at;
+  }
+  closeModal("reviewEditModal");
+  renderReviews();
+  showToast("Review updated.");
+});
+
+document.getElementById("saveReviewProjectsBtn")?.addEventListener("click",async()=>{
+  const reviewId=document.getElementById("saveReviewProjectsBtn").dataset.reviewId;
+  if(!reviewId)return;
+  const selected=[...document.querySelectorAll("[data-review-project]:checked")].map(x=>x.value);
+  const del=await dyolaSupabase.from("review_project_assignments").delete().eq("review_id",reviewId);
+  if(del.error){showToast("Could not update review assignments.");return;}
+  if(selected.length){
+    const ins=await dyolaSupabase.from("review_project_assignments").insert(selected.map(project_id=>({review_id:reviewId,project_id})));
+    if(ins.error){showToast("Could not save review assignments.");return;}
+  }
+  closeModal("reviewProjectsModal");
+  showToast("Review project assignments saved.");
+});
 
 async function updateReviewStatus(id,status){
   const {error}=await dyolaSupabase
@@ -693,6 +1305,8 @@ function openEditor(name){
   currentSection=name;
   const data=db.sections[name]||{heading:name,text:"",visible:true,background:"",media_ids:[]};
   document.getElementById("editorTitle").textContent="Edit "+name;
+  document.getElementById("editorHeading").value=data.heading||name;
+  document.getElementById("editorText").value=data.text||"";
   document.getElementById("editorVisibility").value=data.visible===false?"Hidden":"Visible";
   const background=document.getElementById("editorBackground");
   background.dataset.current=data.background_media_id||data.background||"";
@@ -988,23 +1602,166 @@ document.getElementById("saveEnquiryBtn")?.addEventListener("click",()=>{
   db.enquiries.unshift(e);if(save("enquiries",db.enquiries)){renderEnquiries();closeModal("enquiryModal");showToast("Enquiry saved.")}
 });
 
-/* Project */
+/* Project — Supabase */
+function slugifyProjectTitle(value){
+  return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+}
+
+async function uploadProjectCover(file){
+  if(!file)return "";
+  const media=await uploadMediaFileToWorker(file,"Image","Project");
+  return media?.url||"";
+}
+
+async function uploadProjectMediaFiles(files,projectName){
+  const uploaded=[];
+  for(const file of files){
+    const type=String(file.type||"").toLowerCase().startsWith("video/") ? "Video" : "Image";
+    const media=await uploadMediaFileToWorker(file,type,projectName);
+    if(media?.url) uploaded.push(media);
+  }
+  return uploaded;
+}
+
+let editingProjectId="";
+
+function resetProjectModal(){
+  editingProjectId="";
+  document.getElementById("projectModalTitle").textContent="Add Project";
+  document.getElementById("saveProjectBtn").textContent="Create Project";
+  document.getElementById("projectName").value="";
+  document.getElementById("projectClient").value="";
+  document.getElementById("projectCategory").value="Real Estate";
+  document.getElementById("projectLocation").value="";
+  document.getElementById("projectPublished").value="true";
+  document.getElementById("projectDescription").value="";
+  document.getElementById("projectChallenge").value="";
+  document.getElementById("projectApproach").value="";
+  document.getElementById("projectOutcome").value="";
+}
+
+function openEditProject(projectId){
+  const project=(db.projects||[]).find(p=>String(p.id)===String(projectId));
+  if(!project)return;
+  closeModal("projectMediaManagerModal");
+  editingProjectId=String(project.id);
+  document.getElementById("projectModalTitle").textContent="Edit Project";
+  document.getElementById("saveProjectBtn").textContent="Save Changes";
+  document.getElementById("projectName").value=project.name||"";
+  document.getElementById("projectClient").value=project.client||"";
+  document.getElementById("projectCategory").value=project.category||"Real Estate";
+  document.getElementById("projectLocation").value=project.location||"";
+  document.getElementById("projectPublished").value=project.published===false?"false":"true";
+  document.getElementById("projectDescription").value=project.description||"";
+  document.getElementById("projectChallenge").value=project.challenge||"";
+  document.getElementById("projectApproach").value=project.approach||"";
+  document.getElementById("projectOutcome").value=project.outcome||"";
+  openModal("projectModal");
+}
+
+document.getElementById("editProjectBtn")?.addEventListener("click",function(event){
+  event.preventDefault();
+  event.stopPropagation();
+  if(activeProjectMediaManagerId) openEditProject(activeProjectMediaManagerId);
+});
+
 document.getElementById("saveProjectBtn")?.addEventListener("click",async()=>{
-  const name=document.getElementById("projectName").value.trim();if(!name){showToast("Please enter a project name.");return}
-  const thumb=await readFile(document.getElementById("projectThumbnail").files[0]);
-  const media=await Promise.all([...document.getElementById("projectMedia").files].map(readFile));
-  db.projects.unshift({
-    id:uid(),name,client:document.getElementById("projectClient").value.trim(),
-    type:document.getElementById("projectType").value,category:document.getElementById("projectCategory").value,
-    description:document.getElementById("projectDescription").value.trim(),thumbnail:thumb,media,featured:false
-  });
-  if(save("projects",db.projects)){renderProjects();closeModal("projectModal");showToast("Project created.")}
+  const name=document.getElementById("projectName").value.trim();
+  if(!name){showToast("Please enter a project name.");return}
+
+  const button=document.getElementById("saveProjectBtn");
+  button.disabled=true;
+  button.textContent=editingProjectId?"Saving...":"Creating...";
+
+  try{
+    const payload={
+      title:name,
+      description:document.getElementById("projectDescription").value.trim()||null,
+      challenge:document.getElementById("projectChallenge").value.trim()||null,
+      approach:document.getElementById("projectApproach").value.trim()||null,
+      outcome:document.getElementById("projectOutcome").value.trim()||null,
+      category:document.getElementById("projectCategory").value||null,
+      subcategory:null,
+      client:document.getElementById("projectClient").value.trim()||null,
+      location:document.getElementById("projectLocation").value.trim()||null,
+      published:document.getElementById("projectPublished").value==="true"
+    };
+
+    if(editingProjectId){
+      // Do not use .single() here. Supabase/PostgREST can return zero rows
+      // from an UPDATE when the row is not returned by the policy, which
+      // produces "Cannot coerce the result to a single JSON object" even
+      // though the update request itself did not throw a normal error.
+      const {error:updateError}=await dyolaSupabase
+        .from("projects")
+        .update(payload)
+        .eq("id",editingProjectId);
+
+      if(updateError)throw updateError;
+
+      // Re-read the project so the admin state always uses the saved record.
+      const {data,error:readError}=await dyolaSupabase
+        .from("projects")
+        .select("id,title,slug,description,challenge,approach,outcome,category,subcategory,client,location,published,created_at,updated_at")
+        .eq("id",editingProjectId)
+        .maybeSingle();
+
+      if(readError)throw readError;
+      if(!data)throw new Error("Project was not returned after saving. Please check the Supabase update permission for projects.");
+
+      const project=db.projects.find(p=>String(p.id)===editingProjectId);
+      if(project){
+        project.name=data.title||"";
+        project.client=data.client||"";
+        project.type=data.subcategory||"";
+        project.category=data.category||"";
+        project.location=data.location||"";
+        project.description=data.description||"";
+        project.challenge=data.challenge||"";
+        project.approach=data.approach||"";
+        project.outcome=data.outcome||"";
+        project.published=data.published!==false;
+        project.slug=data.slug||project.slug||"";
+      }
+
+      renderProjects();
+      closeModal("projectModal");
+      editingProjectId="";
+      document.getElementById("projectModalTitle").textContent="Add Project";
+      document.getElementById("saveProjectBtn").textContent="Create Project";
+      showToast("Project updated successfully.");
+    }else{
+      const payloadWithSlug={...payload,slug:slugifyProjectTitle(name)+"-"+Date.now().toString(36)};
+      const {data,error}=await dyolaSupabase
+        .from("projects")
+        .insert([payloadWithSlug])
+        .select("id,title,slug,description,challenge,approach,outcome,category,subcategory,client,location,published,created_at,updated_at")
+        .single();
+      if(error)throw error;
+
+      db.projects.unshift({
+        id:data.id,name:data.title||"",client:data.client||"",type:data.subcategory||"",category:data.category||"",
+        location:data.location||"",description:data.description||"",challenge:data.challenge||"",approach:data.approach||"",outcome:data.outcome||"",thumbnail:"",media:[],featured:false,published:data.published!==false,slug:data.slug||""
+      });
+      renderProjects();
+      closeModal("projectModal");
+      resetProjectModal();
+      showToast("Project created successfully.");
+    }
+  }catch(error){
+    console.error(error);
+    showToast(error.message||"Could not save project.");
+  }finally{
+    button.disabled=false;
+    if(editingProjectId) button.textContent="Save Changes";
+    else button.textContent="Create Project";
+  }
 });
 
 /* Media — Cloudflare R2 Worker → Supabase */
 const DYOLA_MEDIA_WORKER_URL = "https://wild-firefly-e101.latmaxsgallery.workers.dev/upload";
 
-async function uploadMediaFileToWorker(file,type,folder){
+async function uploadMediaFileToWorker(file,type,folder,projectId,displayName){
   const {data:{session}}=await dyolaSupabase.auth.getSession();
   if(!session?.access_token){
     throw new Error("Your admin session has expired. Please sign in again.");
@@ -1014,6 +1771,8 @@ async function uploadMediaFileToWorker(file,type,folder){
   formData.append("file",file);
   formData.append("type",type);
   formData.append("folder",folder);
+  if(projectId) formData.append("project_id",projectId);
+  if(displayName) formData.append("display_name",displayName);
 
   const response=await fetch(DYOLA_MEDIA_WORKER_URL,{
     method:"POST",
@@ -1036,6 +1795,8 @@ document.getElementById("uploadMediaBtn")?.addEventListener("click",async()=>{
 
   const type=document.getElementById("mediaType").value;
   const folder=document.getElementById("mediaFolder").value;
+  const projectId=document.getElementById("mediaProject").value;
+  const displayName=document.getElementById("mediaDisplayName").value.trim();
   const button=document.getElementById("uploadMediaBtn");
 
   button.disabled=true;
@@ -1043,11 +1804,13 @@ document.getElementById("uploadMediaBtn")?.addEventListener("click",async()=>{
 
   try{
     for(const file of files){
-      await uploadMediaFileToWorker(file,type,folder);
+      await uploadMediaFileToWorker(file,type,folder,projectId,displayName);
     }
 
     await loadSupabaseMedia();
     document.getElementById("mediaFiles").value="";
+    document.getElementById("mediaDisplayName").value="";
+    document.getElementById("mediaProject").value="";
     closeModal("mediaModal");
     showToast(`${files.length} media file${files.length>1?"s":""} uploaded successfully.`);
   }catch(error){
@@ -1082,16 +1845,19 @@ function companyRowToAdmin(c){
 async function loadSupabaseMedia(){
   const {data,error}=await dyolaSupabase
     .from("media")
-    .select("id,name,type,folder,url,r2_key,created_at")
+    .select("id,name,display_name,type,folder,url,r2_key,project_id,display_order,created_at")
     .order("created_at",{ascending:false});
   if(error) throw error;
   db.media=(data||[]).map(m=>({
     id:m.id,
     name:m.name||"",
+    display_name:m.display_name||"",
     type:m.type||"",
     folder:m.folder||"General",
     url:m.url||"",
     r2_key:m.r2_key||"",
+    project_id:m.project_id||null,
+    display_order:m.display_order===null||m.display_order===undefined?null:Number(m.display_order),
     created_at:m.created_at
   }));
   renderMedia();
@@ -1194,11 +1960,15 @@ document.getElementById("saveSectionBtn")?.addEventListener("click",async()=>{
   const mediaIds=[...mediaSelect.options].filter(o=>o.selected).map(o=>o.value);
   const old=db.sections[currentSection]||{};
 
+  const headingValue=document.getElementById("editorHeading").value.trim();
+  const textValue=document.getElementById("editorText").value.trim();
+  const visibilityValue=document.getElementById("editorVisibility").value;
+
   const payload={
     section_key:currentSection,
-    heading:old.heading||currentSection,
-    text:old.text||"",
-    visible:old.visible!==false,
+    heading:headingValue||currentSection,
+    text:textValue||"",
+    visible:visibilityValue!=="Hidden",
     background_media_id:(backgroundValue&&backgroundValue!=="__none__")?backgroundValue:null,
     media_ids:mediaIds,
     updated_at:new Date().toISOString()
@@ -1316,7 +2086,7 @@ async function initSupabaseAdmin(){
   const {data:{session}}=await dyolaSupabase.auth.getSession();
   if(session){
     gate.style.display="none";
-    try{ await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseWebsiteSections(); }catch(error){ console.error(error); showToast("Signed in, but some admin data could not be loaded."); }
+    try{ await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseProjects(); await loadSupabaseWebsiteSections(); }catch(error){ console.error(error); showToast("Signed in, but some admin data could not be loaded."); }
   }else{ gate.style.display="flex"; }
 }
 
@@ -1331,7 +2101,7 @@ document.getElementById("authLoginBtn")?.addEventListener("click",async()=>{
   btn.disabled=false; btn.textContent="Sign In";
   if(error){errorBox.textContent=error.message;return;}
   document.getElementById("authGate").style.display="none";
-  try{await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseWebsiteSections();}catch(err){console.error(err);showToast("Signed in, but some admin data could not be loaded.");}
+  try{await loadSupabaseEnquiries(); await loadSupabaseReviews(); await loadSupabaseCompanies(); await loadSupabaseMedia(); await loadSupabaseProjects(); await loadSupabaseWebsiteSections();}catch(err){console.error(err);showToast("Signed in, but some admin data could not be loaded.");}
 });
 
 document.getElementById("logoutBtn")?.addEventListener("click",async()=>{ await dyolaSupabase.auth.signOut(); location.reload(); });
