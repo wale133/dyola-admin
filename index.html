@@ -931,17 +931,22 @@ function renderProjectMediaManager(){
         if(fromVisibleIndex<0||toVisibleIndex<0)return;
         visibleMedia.splice(fromVisibleIndex,1);
         visibleMedia.splice(toVisibleIndex,0,dragged);
-        const typeItems=allMedia.filter(m=>projectMediaSortType(m)===activeProjectMediaSortType).sort((a,b)=>{
-          const ao=a.display_order==null?Number.MAX_SAFE_INTEGER:Number(a.display_order);
-          const bo=b.display_order==null?Number.MAX_SAFE_INTEGER:Number(b.display_order);
-          if(ao!==bo)return ao-bo;
-          return new Date(a.created_at||0)-new Date(b.created_at||0);
+        // IMPORTANT: the drag operation must update the project's in-memory
+        // media order. The previous version only changed a temporary
+        // visibleMedia array, then immediately re-rendered from project.media,
+        // which made the item jump back to its old position.
+        visibleMedia.forEach((media,index)=>{
+          media.display_order=index+1;
         });
-        if(activeProjectMediaSortType!=="All"){
-          visibleMedia.forEach((media,index)=>media.display_order=index+1);
-        }else{
-          visibleMedia.forEach((media,index)=>media.display_order=index+1);
-        }
+
+        // Keep the project's media array synchronized with the new order for
+        // this media type. Other media types keep their own independent order.
+        const orderedIds=new Map(visibleMedia.map((media,index)=>[String(media.id),index+1]));
+        project.media.forEach(media=>{
+          const next=orderedIds.get(String(media.id));
+          if(next!==undefined) media.display_order=next;
+        });
+
         renderProjectMediaManager();
       });
     });
